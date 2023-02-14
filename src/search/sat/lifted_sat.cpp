@@ -11,6 +11,7 @@
 #include <cassert>
 #include <chrono>
 #include <iomanip>
+#include <stdexcept>
 
 using namespace std;
 
@@ -242,6 +243,12 @@ LiftedSAT::LiftedSAT(const Task & task) {
                 }
             }
         }
+    }
+
+
+    if (task.goal.goal.empty()) {
+        throw std::logic_error("LiftedSAT::LiftedSAT(): Task has no goals/goal formula is false, "
+                               "but not determined to be statically false");
     }
 
     // same for goals

@@ -52,6 +52,18 @@ int main(int argc, char *argv[]) {
 
 	if (opt.get_search_engine() == "sat"){
 #ifndef CMAKE_NO_SAT
+        // Start search
+        if (task.is_trivially_unsolvable()) {
+            cout << "Problem goal was statically determined to be unsatisfiable." << endl;
+            exit_with(utils::ExitCode::SEARCH_UNSOLVABLE);
+        }
+
+        if (task.goal.goal.empty()) {
+            cout << "Task has no goals/goal formula is false, but not determined to be statically false" << endl;
+            exit_with(utils::ExitCode::SEARCH_UNSOLVABLE);
+        }
+
+
         std::unique_ptr<LiftedSAT> liftedSAT(new LiftedSAT(task));
     	try {
     	    auto exitcode = liftedSAT->solve(task,opt.get_planLength(), opt.get_optimal(), opt.get_incremental());
@@ -73,11 +85,8 @@ int main(int argc, char *argv[]) {
     	                                                                           opt.get_seed(),
     	                                                                           task));
 
-    	// Start search
-    	if (task.is_trivially_unsolvable()) {
-    	    cout << "Problem goal was statically determined to be unsatisfiable." << endl;
-    	    exit_with(utils::ExitCode::SEARCH_UNSOLVABLE);
-    	}
+
+
 
     	try {
     	    auto exitcode = search->search(task, *sgen, *heuristic);

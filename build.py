@@ -48,6 +48,9 @@ def build(debug_flag, sat, ipasir):
         if ipasir:
             cmakeArguments.append('-DKISSAT=OFF')
         cmakeArguments.append('-DSAT_DIR=' + sat)
+    else:
+        cmakeArguments.append('-DSAT=ON')
+        cmakeArguments.append('-DKISSAT=ON')
 
     subprocess.check_call(cmakeArguments,
                           cwd=BUILD_SEARCH_DIR)
